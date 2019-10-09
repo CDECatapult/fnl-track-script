@@ -56,65 +56,68 @@ while True:
     # If a card is found
     #
     if status == MIFAREReader.MI_OK:
-        iteration = 0
-        items_list = ""
-        (status,nuid) = MIFAREReader.MFRC522_Anticoll()
-        if (len(nuid) >= 4 and (nuid != latest_card)):
-            print "Card detected"
-            latest_card = nuid
-            NUID16 = []
-            idall = "%02x%02x%02x%02x" % (nuid[0], nuid[1], nuid[2], nuid[3])
-            for j in range(0, 4):
-                if len(str(nuid[j]))== 1:
-                    NUID16.append(str("0")+str(hex(nuid[j]))[2:])
-                else:
-                    NUID16.append(str(hex(nuid[j]))[2:])
-            (status,nuid) = MIFAREReader.MFRC522_Anticoll()
-            MIFAREReader.MFRC522_SelectTag(nuid)
-
-            #
-            #
-            # Get every block
-            #
-            for i in range(0,46):
-                index = blocks[i]
-                status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, index, key, nuid)
-                if status == MIFAREReader.MI_OK:
-                    GetValue = MIFAREReader.MFRC522_ReturnValue(index)
-                    if (len(GetValue) == 0):
-                        items_list = ''
-                        print 'no GetValue?'
-                        break
-                    hasData = GetValue[0] == sectors[i] and GetValue[1] == blocks[i]
-                    if (hasData):
-                        dd = GetValue[3]
-                        month = GetValue[4]
-                        yy = GetValue[5]
-                        hh = GetValue[7]
-                        mm = GetValue[8]
-                        isodate = "20%02d-%02d-%02dT%02d:%02d" % (yy, month, dd, hh, mm)
-                        if (iteration == 0):
-                            items_list = str(i)
-                            iteration = iteration + 1
-                        else:
-                            items_list = items_list + ";" + str(i)
-                else:
-                    print "card not ok"
-                    items_list = ''
-                    break
-
-            if items_list == '':
-                print 'No data'
-            else:
-                # construct a single record for the visit - person (UID) based
-                # we can use UID, readerId, datetime (of last item) - need to laminate itemId into a composite ... semi-colon separated
-                # write to database
-                url = "https://sensit-17f0.restdb.io/rest/dc-fnl-tracking-person"
-                payload = '{"UID" : "%s", "readerId" : "%s",  "items_list" : "%s", "datetime" : "%s" }' % (idall, readerId, items_list, isodate)
-                print "Saving..."
-                response = requests.request("POST", url, data=payload, headers=headers)
-                print "Saved!", response
-
+        try:
+            iteration = 0
             items_list = ""
-            GPIO.cleanup()
-            MIFAREReader = MFRC522.MFRC522()
+            (status,nuid) = MIFAREReader.MFRC522_Anticoll()
+            if (len(nuid) >= 4 and (nuid != latest_card)):
+                print "Card detected"
+                latest_card = nuid
+                NUID16 = []
+                idall = "%02x%02x%02x%02x" % (nuid[0], nuid[1], nuid[2], nuid[3])
+                for j in range(0, 4):
+                    if len(str(nuid[j]))== 1:
+                        NUID16.append(str("0")+str(hex(nuid[j]))[2:])
+                    else:
+                        NUID16.append(str(hex(nuid[j]))[2:])
+                (status,nuid) = MIFAREReader.MFRC522_Anticoll()
+                MIFAREReader.MFRC522_SelectTag(nuid)
+
+                #
+                #
+                # Get every block
+                #
+                for i in range(0,46):
+                    index = blocks[i]
+                    status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, index, key, nuid)
+                    if status == MIFAREReader.MI_OK:
+                        GetValue = MIFAREReader.MFRC522_ReturnValue(index)
+                        if (len(GetValue) == 0):
+                            items_list = ''
+                            print 'no GetValue?'
+                            break
+                        hasData = GetValue[0] == sectors[i] and GetValue[1] == blocks[i]
+                        if (hasData):
+                            dd = GetValue[3]
+                            month = GetValue[4]
+                            yy = GetValue[5]
+                            hh = GetValue[7]
+                            mm = GetValue[8]
+                            isodate = "20%02d-%02d-%02dT%02d:%02d" % (yy, month, dd, hh, mm)
+                            if (iteration == 0):
+                                items_list = str(i)
+                                iteration = iteration + 1
+                            else:
+                                items_list = items_list + ";" + str(i)
+                    else:
+                        print "card not ok"
+                        items_list = ''
+                        break
+
+                if items_list == '':
+                    print 'No data'
+                else:
+                    # construct a single record for the visit - person (UID) based
+                    # we can use UID, readerId, datetime (of last item) - need to laminate itemId into a composite ... semi-colon separated
+                    # write to database
+                    url = "https://sensit-17f0.restdb.io/rest/dc-fnl-tracking-person"
+                    payload = '{"UID" : "%s", "readerId" : "%s",  "items_list" : "%s", "datetime" : "%s" }' % (idall, readerId, items_list, isodate)
+                    print "Saving..."
+                    response = requests.request("POST", url, data=payload, headers=headers)
+                    print "Saved!", response
+
+                items_list = ""
+                GPIO.cleanup()
+                MIFAREReader = MFRC522.MFRC522()
+        except:
+            print "it failed for an unknown reason"
