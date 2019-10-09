@@ -59,7 +59,7 @@ while True:
         iteration = 0
         items_list = ""
         (status,nuid) = MIFAREReader.MFRC522_Anticoll()
-        if (nuid and (nuid != latest_card)):
+        if (len(nuid) >= 4 and (nuid != latest_card)):
             print "Card detected"
             latest_card = nuid
             NUID16 = []
