@@ -16,12 +16,7 @@ isodate = ""
 readerId = "DC-LON-01" # HARDCODED readerId - needs to be changed for each reader instance
 
 print str(sys.argv)
-<<<<<<< HEAD
 if (len(sys.argv[0]) != 2):
-=======
-if (len(sys.argv) != 2):
-    print "We need a key!"
->>>>>>> 39ed0b979a8361546a0cbed1f9fa70affeb81cae
     sys.exit()
 
 headers = {
