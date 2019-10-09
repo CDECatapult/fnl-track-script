@@ -122,3 +122,7 @@ while True:
                 MIFAREReader = MFRC522.MFRC522()
         except:
             print "it failed for an unknown reason"
+            latest_card = ''
+            items_list = ""
+            GPIO.cleanup()
+            MIFAREReader = MFRC522.MFRC522()
