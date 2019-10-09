@@ -20,7 +20,7 @@ if (len(sys.argv) != 2):
 
 headers = {
     'content-type': "application/json",
-    'x-apikey': sys.argv[0],
+    'x-apikey': sys.argv[1],
     'cache-control': "no-cache"
 }
 
@@ -102,7 +102,8 @@ while True:
             # write to database
             url = "https://sensit-17f0.restdb.io/rest/dc-fnl-tracking-person"
             payload = '{"UID" : "%s", "readerId" : "%s",  "items_list" : "%s", "datetime" : "%s" }' % (idall, readerId, items_list, isodate)
+            print "Saving..."
             response = requests.request("POST", url, data=payload, headers=headers)
-            print("Saved to database!", response)
+            print "Saved!", response
             GPIO.cleanup()
             MIFAREReader = MFRC522.MFRC522()
