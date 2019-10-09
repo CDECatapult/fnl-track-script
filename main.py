@@ -96,14 +96,20 @@ while True:
                             items_list = items_list + ";" + str(i)
                 else:
                     print "card not ok "
+                    break
 
-            # construct a single record for the visit - person (UID) based
-            # we can use UID, readerId, datetime (of last item) - need to laminate itemId into a composite ... semi-colon separated
-            # write to database
-            url = "https://sensit-17f0.restdb.io/rest/dc-fnl-tracking-person"
-            payload = '{"UID" : "%s", "readerId" : "%s",  "items_list" : "%s", "datetime" : "%s" }' % (idall, readerId, items_list, isodate)
-            print "Saving..."
-            response = requests.request("POST", url, data=payload, headers=headers)
-            print "Saved!", response
+            if items_list == '':
+                print 'No data'
+            else:
+                # construct a single record for the visit - person (UID) based
+                # we can use UID, readerId, datetime (of last item) - need to laminate itemId into a composite ... semi-colon separated
+                # write to database
+                url = "https://sensit-17f0.restdb.io/rest/dc-fnl-tracking-person"
+                payload = '{"UID" : "%s", "readerId" : "%s",  "items_list" : "%s", "datetime" : "%s" }' % (idall, readerId, items_list, isodate)
+                print "Saving..."
+                response = requests.request("POST", url, data=payload, headers=headers)
+                print "Saved!", response
+
+            items_list = ""
             GPIO.cleanup()
             MIFAREReader = MFRC522.MFRC522()
