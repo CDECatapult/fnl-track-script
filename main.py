@@ -15,8 +15,7 @@ iteration = 0
 isodate = ""
 readerId = "DC-LON-01" # HARDCODED readerId - needs to be changed for each reader instance
 
-print str(sys.argv)
-if (len(sys.argv[0]) != 2):
+if (len(sys.argv) != 2):
     sys.exit()
 
 headers = {
