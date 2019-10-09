@@ -106,6 +106,7 @@ while True:
 
                 if items_list == '':
                     print 'No data'
+                    latest_card = ''
                 else:
                     # construct a single record for the visit - person (UID) based
                     # we can use UID, readerId, datetime (of last item) - need to laminate itemId into a composite ... semi-colon separated
