@@ -81,7 +81,10 @@ while True:
                 status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, index, key, nuid)
                 if status == MIFAREReader.MI_OK:
                     GetValue = MIFAREReader.MFRC522_ReturnValue(index)
-                    print 'get value', GetValue
+                    if (len(GetValue) == 0):
+                        items_list = ''
+                        print 'no GetValue?'
+                        break
                     hasData = GetValue[0] == sectors[i] and GetValue[1] == blocks[i]
                     if (hasData):
                         dd = GetValue[3]
