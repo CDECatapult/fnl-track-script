@@ -95,7 +95,8 @@ while True:
                         else:
                             items_list = items_list + ";" + str(i)
                 else:
-                    print "card not ok "
+                    print "card not ok"
+                    items_list = ''
                     break
 
             if items_list == '':
