@@ -15,7 +15,12 @@ iteration = 0
 isodate = ""
 readerId = "DC-LON-01" # HARDCODED readerId - needs to be changed for each reader instance
 
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BOARD)
+GPIO.cleanup()
+
 if (len(sys.argv) != 2):
+    print "I need the API key please!"
     sys.exit()
 
 headers = {
@@ -108,6 +113,15 @@ while True:
                     print 'No data'
                     latest_card = ''
                 else:
+                    # let's beep on board pin 40 (buzzer)
+                    
+                    #buzzer=40
+                    #GPIO.setup(buzzer,GPIO.OUT)
+                    #GPIO.output(buzzer,GPIO.HIGH)
+                    #sleep(1)
+                    #GPIO.output(buzzer,GPIO.LOW)
+ 
+
                     # construct a single record for the visit - person (UID) based
                     # we can use UID, readerId, datetime (of last item) - need to laminate itemId into a composite ... semi-colon separated
                     # write to database
