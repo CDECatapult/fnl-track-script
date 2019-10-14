@@ -115,7 +115,7 @@ while True:
                     payload = '{"UID" : "%s", "readerId" : "%s",  "items_list" : "%s", "datetime" : "%s" }' % (idall, readerId, items_list, isodate)
                     print "Saving..."
                     response = requests.request("POST", url, data=payload, headers=headers)
-                    print "Saved!", response
+                    print "Saved!", response, payload
 
                 items_list = ""
                 GPIO.cleanup()
